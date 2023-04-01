@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
             self.vel.y = -10
 
         self.acc.x += self.vel.x * FRIC
-        тут проблема +-#self.vel += self.acc
+        self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
 
         if self.pos.x > WIDTH:
@@ -108,18 +108,19 @@ while True:
     hits = pygame.sprite.groupcollide(players, platforms, False, False)
     if hits:
         print(1)
-       # P1.pos.y = #hits[0].rect.top + 1
+        P1.vel.x = 0
         P1.vel.y = 0
+    else:
+        P1.update()
+
 #Доделать бонусы (гравитация)
     #hits = pygame.sprite.groupcollide(players, booster, False, True)
     #if hits:
     #    print
     #    #P1.pos.y = hits[0].rect.top + 1
     ##    P1.vel.y = 1
-    P1.update()
     for entity in all_sprites:
        displaysurface.blit(entity.surf, entity.rect)
 
     pygame.display.update()
     FramePerSec.tick(FPS)
-# Поправить проблему в гравитации вверх в Players (гравитация)
