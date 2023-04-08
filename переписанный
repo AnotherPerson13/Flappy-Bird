@@ -1,0 +1,92 @@
+import pygame
+from pygame.locals import *
+import sys
+import random
+
+pygame.init()
+
+Height = 750
+Width = 800
+
+Fps = 60
+FramePerSec = pygame.time.Clock()
+
+Player_x = 200
+Player_speed = 5
+
+Player_y = 400
+is_jump = False
+jump_count = 7
+
+displaysurface = pygame.display.set_mode((Width, Height))
+pygame.display.set_caption("Game")
+
+class Baseplate(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.surf = pygame.Surface((Width, 20))
+        self.surf.fill((255, 0, 0))
+        self.rect = self.surf.get_rect(center=(Width / 2, Height - 10))
+
+class Platform1(pygame.sprite.Sprite):
+    def __init__(self, width, height, x, y):
+        super().__init__()
+        self.surf = pygame.Surface((height, width))
+        self.surf.fill((200, 110, 30))
+        self.rect = self.surf.get_rect(center=(x, y))
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.surf = pygame.Surface((30, 30))
+        self.surf.fill((128, 255, 40))
+        self.rect = self.surf.get_rect()
+
+all_sprites = pygame.sprite.Group()
+platforms = pygame.sprite.Group()
+players = pygame.sprite.Group()
+
+BP = Baseplate()
+
+P1 = Player()
+
+PT1 = Platform1(100, 20, 100, 250)
+PT2 = Platform1(30, 120, 300, 450)
+
+players.add(P1)
+platforms.add(BP)
+platforms.add(PT1)
+platforms.add(PT2)
+
+all_sprites.add(BP)
+all_sprites.add(P1)
+all_sprites.add(PT1)
+all_sprites.add(PT2)
+
+while True:
+    keys = pygame.key.get_pressed()
+    if keys[K_a] and Player_x > 1:
+        Player_x -= Player_speed
+    elif keys[K_d] and Player_x < 800:
+        Player_x += Player_speed
+    if not is_jump:
+        if keys[K_SPACE]:
+            is_jump = True
+
+    else:
+        if jump_count >= -7:
+            if jump_count > 0:
+                player_y -= (jump_count ** 2) / 2
+                jump_count -= 1
+            else:
+                player_y += (jump_count ** 2) / 2
+                
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+
+displaysurface.blit(entity.surf, entity.rect)
+pygame.display.update()
+FramePerSec.tick(Fps)
