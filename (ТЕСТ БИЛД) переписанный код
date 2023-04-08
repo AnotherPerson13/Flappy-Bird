@@ -1,0 +1,99 @@
+import pygame
+from pygame.locals import *
+import sys
+import random
+
+pygame.init()
+
+Height = 750
+Width = 800
+
+Fps = 60
+FramePerSec = pygame.time.Clock()
+
+is_jump = False
+
+displaysurface = pygame.display.set_mode((Width, Height))
+pygame.display.set_caption("Game")
+
+
+class Baseplate(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((Width, 20))
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect(center=(Width / 2, Height - 10))
+
+
+class Platform1(pygame.sprite.Sprite):
+    def __init__(self, width, height, x, y):
+        super().__init__()
+        self.image = pygame.Surface((height, width))
+        self.image.fill((200, 110, 30))
+        self.rect = self.image.get_rect(center=(x, y))
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((30, 30))
+        self.image.fill((128, 255, 40))
+        self.rect = self.image.get_rect(center=(100,400))
+        self.speed = 5
+        self.is_jump = False
+        self.gravity = 3
+        self.jump_power = 200
+        
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        self.rect.y += self.gravity
+        if keys[K_a] and self.rect.x > 1:
+            self.rect.x -= self.speed
+        elif keys[K_d] and self.rect.x < 800:
+            self.rect.x += self.speed
+        if not self.is_jump:
+            if keys[K_SPACE]:
+                self.is_jump = True
+                self.rect.y -= self.jump_power
+                self.gravity = 3
+        if self.rect.y >= 700:
+            self.gravity = 0
+            self.is_jump = False
+
+
+
+all_sprites = pygame.sprite.Group()
+platforms = pygame.sprite.Group()
+players = pygame.sprite.Group()
+
+BP = Baseplate()
+
+P1 = Player()
+
+PT1 = Platform1(100, 20, 100, 250)
+PT2 = Platform1(30, 120, 300, 450)
+
+players.add(P1)
+platforms.add(BP)
+platforms.add(PT1)
+platforms.add(PT2)
+
+all_sprites.add(BP)
+all_sprites.add(P1)
+all_sprites.add(PT1)
+all_sprites.add(PT2)
+
+while True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    all_sprites.update()
+    displaysurface.fill((255,255,255))
+    all_sprites.draw(displaysurface)
+    pygame.display.flip()
+
+
+    FramePerSec.tick(Fps)
