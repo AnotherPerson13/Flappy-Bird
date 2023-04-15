@@ -1,7 +1,7 @@
+import sys
+
 import pygame
 from pygame.locals import *
-import sys
-import random
 
 pygame.init()
 
@@ -38,31 +38,42 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((30, 30))
         self.image.fill((128, 255, 40))
-        self.rect = self.image.get_rect(center=(100,400))
+        self.rect = self.image.get_rect(center=(100, 400))
         self.speed = 5
         self.is_jump = False
         self.gravity = 3
         self.jump_power = 200
-        
+        self.fall_speed = 1
+        self.ground = 0
 
     def update(self):
+        self.speedx = 0
         keys = pygame.key.get_pressed()
-        self.rect.y += self.gravity
-        if keys[K_a] and self.rect.x > 1:
-            self.rect.x -= self.speed
-        elif keys[K_d] and self.rect.x < 800:
-            self.rect.x += self.speed
-        if not self.is_jump:
-            if keys[K_SPACE]:
-                self.is_jump = True
-                self.rect.y -= self.jump_power
-                self.gravity = 3
-        if self.rect.y >= 700:
-            self.gravity = 0
+        if keys[pygame.K_a]:
+            self.speedx = -8
+        if keys[pygame.K_d]:
+            self.speedx = 8
+        if self.rect.right > Width:
+            self.rect.right = Width
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.bottom >= Height - 15:
+            self.rect.bottom = Height - 15
             self.is_jump = False
 
+        if self.is_jump == False:
+            if keys[pygame.K_SPACE]:
+                self.ground = self.rect.y
+                self.is_jump = True
+                self.gravity = -5
+        if self.is_jump == True:
+            if self.rect.y <= self.ground - 200:
+                self.gravity = 5
+        print(self.rect.y)
 
 
+        self.rect.x += self.speedx
+        self.rect.y += self.gravity
 all_sprites = pygame.sprite.Group()
 platforms = pygame.sprite.Group()
 players = pygame.sprite.Group()
@@ -91,9 +102,8 @@ while True:
             sys.exit()
 
     all_sprites.update()
-    displaysurface.fill((255,255,255))
+    displaysurface.fill((255, 255, 255))
     all_sprites.draw(displaysurface)
     pygame.display.flip()
-
 
     FramePerSec.tick(Fps)
