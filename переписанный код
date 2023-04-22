@@ -1,5 +1,5 @@
 import sys
-
+import random
 import pygame
 from pygame.locals import *
 
@@ -35,12 +35,14 @@ class Platform1(pygame.sprite.Sprite):
         self.image.fill((200, 110, 30))
         self.rect = self.image.get_rect(center=(x, y))
 
+
 class KillPlatform(pygame.sprite.Sprite):
     def __init__(self, width, height, x, y):
         super().__init__()
         self.image = pygame.Surface((height, width))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect(center=(x, y))
+
 
 class Coins(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -84,12 +86,19 @@ class Player(pygame.sprite.Sprite):
                 self.is_jump = True
                 self.gravity = -4.5
         if self.is_jump == True:
-            if self.rect.y <= self.ground - 300: # Высота прыжка (Менять последний параметр)
+            if self.rect.y <= self.ground - 300:  # Высота прыжка (Менять последний параметр)
                 self.gravity = 5
-
 
         self.rect.x += self.speedx
         self.rect.y += self.gravity
+
+
+x_place = random.randint(1, 750)
+x2_place = random.randint(1, 750)
+x3_place = random.randint(1, 750)
+y_place = random.randint(200,800)
+y2_place = random.randint(200,800)
+y3_place = random.randint(200,800)
 
 all_sprites = pygame.sprite.Group()
 platforms = pygame.sprite.Group()
@@ -106,11 +115,11 @@ PT2 = Platform1(30, 120, 300, 450)
 PT3 = Platform1(74, 20, 600, 200)
 PT4 = Platform1(15, 50, 400, 600)
 
-KT1 = KillPlatform(20,20,600,500)
+KT1 = KillPlatform(20, 20, 600, 500)
 
-C1 = Coins(300,533)
-C2 = Coins(200,400)
-C3 = Coins(510,200)
+C1 = Coins(x_place, y_place)
+C2 = Coins(x2_place, y2_place)
+C3 = Coins(x3_place, y3_place)
 
 players.add(P1)
 platforms.add(BP)
@@ -124,7 +133,6 @@ kill_platforms.add(KT1)
 coins.add(C1)
 coins.add(C2)
 coins.add(C3)
-
 
 all_sprites.add(P1)
 
@@ -148,19 +156,19 @@ while True:
 
     hits_coins = pygame.sprite.groupcollide(players, coins, False, True)
     hits_platforms = pygame.sprite.groupcollide(players, platforms, False, False)
-    Hits_kill = pygame.sprite.groupcollide(players, kill_platforms, False, False)
+    Hits_sum = pygame.sprite.groupcollide(players, kill_platforms, False, False)
     if hits_platforms:
         P1.gravity = 0
         P1.is_jump = False
 
     if hits_coins:
         Coins_sum = Coins_sum + 1
-        print(Coins_sum)
+        print(Coins_sum,"- Монет собрано")
     elif Coins_sum == 3:
         print("Собраны все монеты, конец игры")
         pygame.quit()
 
-    if Hits_kill:
+    if Hits_sum:
         Hits_sum = Hits_sum + 1
     elif Hits_sum == 1:
         print("Убиственная платформа, игра окончена")
