@@ -64,7 +64,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_power = 200
         self.fall_speed = 1
         self.ground = 0
-
+#
     def update(self):
         self.speedx = 0
         keys = pygame.key.get_pressed()
