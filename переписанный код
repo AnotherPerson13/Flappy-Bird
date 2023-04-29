@@ -22,23 +22,23 @@ pygame.display.set_caption("Game")
 
 class Baseplate(pygame.sprite.Sprite):
     def __init__(self):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((Width, 20))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect(center=(Width / 2, Height - 10))
 
 
 class Platform1(pygame.sprite.Sprite):
-    def __init__(self, width, height, x, y):
-        super().__init__()
-        self.image = pygame.Surface((height, width))
-        self.image.fill((200, 110, 30))
+    def __init__(self, x, y,size_x,size_y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("stone.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (size_y, size_x))
         self.rect = self.image.get_rect(center=(x, y))
 
 
 class KillPlatform(pygame.sprite.Sprite):
     def __init__(self, width, height, x, y):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((height, width))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect(center=(x, y))
@@ -46,7 +46,7 @@ class KillPlatform(pygame.sprite.Sprite):
 
 class Coins(pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((25, 25))
         self.image.fill((248, 218, 41))
         self.rect = self.image.get_rect(center=(x, y))
@@ -54,7 +54,7 @@ class Coins(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        super().__init__()
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((30, 30))
         self.image.fill((128, 255, 40))
         self.rect = self.image.get_rect(center=(100, 400))
@@ -96,9 +96,9 @@ class Player(pygame.sprite.Sprite):
 x_place = random.randint(1, 750)
 x2_place = random.randint(1, 750)
 x3_place = random.randint(1, 750)
-y_place = random.randint(200,800)
-y2_place = random.randint(200,800)
-y3_place = random.randint(200,800)
+y_place = random.randint(200,600)
+y2_place = random.randint(200,600)
+y3_place = random.randint(200,600)
 
 all_sprites = pygame.sprite.Group()
 platforms = pygame.sprite.Group()
@@ -110,10 +110,10 @@ BP = Baseplate()
 
 P1 = Player()
 
-PT1 = Platform1(100, 20, 100, 250)
-PT2 = Platform1(30, 120, 300, 450)
-PT3 = Platform1(74, 20, 600, 200)
-PT4 = Platform1(15, 50, 400, 600)
+PT1 = Platform1(100, 250, 100, 20)
+PT2 = Platform1(300, 450, 30, 120)
+PT3 = Platform1(600, 200, 74, 20)
+PT4 = Platform1(400, 600, 15, 50)
 
 KT1 = KillPlatform(20, 20, 600, 500)
 
